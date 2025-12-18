@@ -5,37 +5,39 @@
 import sqlite3
 
 def main():
-    conn=sqlite3.connect('students.db')
-    cur=conn.cursor()
+    conn = sqlite3.connect('students.db')
+    cur = conn.cursor()
 
     add_students_table(cur)
     add_sample_students(cur)
     conn.commit()
 
     while True:
-        print("1. Display table")
-        print('2. Edit a student')
-        print('3. Exit')
+        print("\n1. Display table")
+        print("2. Edit a student")
+        print("3. Exit")
 
-        choice=input("enter your choice (1-3): ")
+        choice = input("Enter your choice (1-3): ")
 
-        if choice=='1':
+        if choice == '1':
             display_students(cur)
-        elif choice=='2':
+        elif choice == '2':
+            display_students(cur)  # show table before editing
             edit_student(cur, conn)
-        elif choice ==3:
-            print('exiting')
+        elif choice == '3':
+            print("Exiting...")
             break
         else:
-            print("please choose one of the options")
+            print("Please choose one of the options")
 
     conn.close()
 
+
 def add_students_table(cur):
-    cur.execute('DROP TABLE IF EXISTS STUDENTS')
+    cur.execute('DROP TABLE IF EXISTS Students')
     cur.execute('''
-        CREATE TABLE STUDENTS(
-                 StudentID INTEGER PRIMARY KEY NOT NULL,
+        CREATE TABLE Students(
+            StudentID INTEGER PRIMARY KEY NOT NULL,
             FirstName TEXT,
             LastName TEXT,
             Major TEXT,
@@ -47,29 +49,33 @@ def add_students_table(cur):
             GradYear INTEGER
         )
     ''')
+
+
 def add_sample_students(cur):
     students = [
         (1, 'Alex', 'Johnson', 'Computer Science', 3.6, 45, 'alex.johnson@example.edu', 'Sophomore', 1, 2027),
-        (2, 'Maria', 'Lopez', 'Nursing', 3.9, 75, 'maria.lopez@example.edu', 'Junior', 1, 2026),
-        (3, 'Jamal', 'Carter', 'Business', 2.8, 30, 'jamal.carter@example.edu', 'Freshman', 1, 2028),
-        (4, 'Sofia', 'Nguyen', 'Psychology', 3.4, 90, 'sofia.nguyen@example.edu', 'Senior', 1, 2025),
-        (5, 'Ethan', 'Kim', 'Engineering', 3.1, 60, 'ethan.kim@example.edu', 'Junior', 1, 2026),
+        (2, 'Bob', 'Lopez', 'Nursing', 3.9, 75, 'maria.lopez@example.edu', 'Junior', 1, 2026),
+        (3, 'Fred', 'Carter', 'Business', 2.8, 30, 'jamal.carter@example.edu', 'Freshman', 1, 2028),
+        (4, 'Joe', 'Nguyen', 'Psychology', 3.4, 90, 'sofia.nguyen@example.edu', 'Senior', 1, 2025),
+        (5, 'Ethan', 'Kim', 'Engineering', 3.1, 60, 'ethan.kim@example.edu', 'Junior', 0, 2026),
         (6, 'Layla', 'Patel', 'Art', 3.7, 18, 'layla.patel@example.edu', 'Freshman', 0, 2029),
-        (7, 'Noah', 'Williams', 'Cybersecurity', 2.9, 33, 'noah.williams@example.edu', 'Sophomore', 1, 2027)
+        (7, 'Noah', 'Williams', 'Cybersecurity', 2.9, 33, 'noah.williams@example.edu', 'Sophomore', 0, 2027)
     ]
 
-    cur.executemany('''
-        INSERT INTO Students VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', students)
+    cur.executemany('INSERT INTO Students VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', students)
+
 
 def display_students(cur):
-    cur.execute('SELECT StudentID, FirstName, LastName, Major, GPA, Standing, GradYear FROM Students')
+    cur.execute('SELECT * FROM Students')
     rows = cur.fetchall()
 
-    print("\nID  Name                     Major                GPA  Standing    GradYear")
-    print("-" * 80)
+    print("\nID | First Name | Last Name | Major               | GPA  | Credits | Email                        | Standing   | Full-Time | Grad Year")
+    print("-" * 130)
+
     for row in rows:
-        print(f"{row[0]:<3} {row[1]} {row[2]:<20} {row[3]:<20} {row[4]:<4.2f} {row[5]:<10} {row[6]}")
+        fulltime = "Yes" if row[8] == 1 else "No"
+        print(f"{row[0]:<3} | {row[1]:<10} | {row[2]:<10} | {row[3]:<18} | {row[4]:<4.2f} | {row[5]:<7} | {row[6]:<28} | {row[7]:<10} | {fulltime:<9} | {row[9]}")
+
 
 def edit_student(cur, conn):
     student_id = input("Enter the Student ID to edit: ")
@@ -81,7 +87,7 @@ def edit_student(cur, conn):
         print("Student not found.")
         return
 
-    print("\npress enter if you want to keep the data the same\n")
+    print("\nPress Enter to keep the current value\n")
 
     first = input(f"First Name [{student[1]}]: ") or student[1]
     last = input(f"Last Name [{student[2]}]: ") or student[2]
@@ -102,6 +108,7 @@ def edit_student(cur, conn):
 
     conn.commit()
     print("Student record updated successfully.")
+
 
 if __name__ == '__main__':
     main()

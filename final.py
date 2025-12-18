@@ -22,7 +22,7 @@ def main():
         if choice == '1':
             display_students(cur)
         elif choice == '2':
-            display_students(cur)  # show table before editing
+            display_students(cur)  
             edit_student(cur, conn)
         elif choice == '3':
             print("Exiting...")

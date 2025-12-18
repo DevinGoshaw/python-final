@@ -57,7 +57,7 @@ def add_sample_students(cur):
         (2, 'Bob', 'Lopez', 'Nursing', 3.9, 75, 'maria.lopez@example.edu', 'Junior', 1, 2026),
         (3, 'Fred', 'Carter', 'Business', 2.8, 30, 'jamal.carter@example.edu', 'Freshman', 1, 2028),
         (4, 'Joe', 'Nguyen', 'Psychology', 3.4, 90, 'sofia.nguyen@example.edu', 'Senior', 1, 2025),
-        (5, 'Ethan', 'Kim', 'Engineering', 3.1, 60, 'ethan.kim@example.edu', 'Junior', 0, 2026),
+        (5, 'Ethan', 'Kim', 'Engineering', 1.1, 60, 'ethan.kim@example.edu', 'Junior', 0, 2026),
         (6, 'Layla', 'Patel', 'Art', 3.7, 18, 'layla.patel@example.edu', 'Freshman', 0, 2029),
         (7, 'Noah', 'Williams', 'Cybersecurity', 2.9, 33, 'noah.williams@example.edu', 'Sophomore', 0, 2027)
     ]
